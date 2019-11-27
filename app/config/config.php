@@ -10,7 +10,7 @@
     define('APPROOT', dirname(dirname(__FILE__)));
     // URL Root
     // define('URLROOT', 'http://localhost/shareposts');
-    define('URLROOT', 'https://shareyourposts.herokuapp.com/');
+    define('URLROOT', 'https://shareyourposts.herokuapp.com');
     // Site Name
     define('SITENAME', 'SharePosts');
 
