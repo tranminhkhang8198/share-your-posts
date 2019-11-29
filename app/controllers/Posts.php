@@ -7,6 +7,7 @@
 
             $this->postModel = $this->model('Post');
             $this->userModel = $this->model('User');
+            $this->commentModel = $this->model('Comment');
         }
 
         public function index() {
@@ -81,7 +82,7 @@
                     'body_err' => ''
                 ];
 
-                // Validate title 
+                // Validate
                 if (empty($data['title'])) {
                     $data['title_err'] = 'Please enter title';
                 }
@@ -148,10 +149,12 @@
         public function show($id) {
             $post = $this->postModel->getPostById($id);
             $user = $this->userModel->getUserById($post->user_id);
+            $comments = $this->commentModel->getCommentsInfoByPostId($id);
 
             $data = [
                 'post' => $post,
-                'user' => $user
+                'user' => $user,
+                'comments' => $comments
             ];
 
             $this->view('posts/show', $data);
@@ -180,6 +183,7 @@
                         $data['posts'] = $posts;
                     } else {
                         $data['search_err'] = 'Does not have any result match with "' . $data['search'] . '"';
+                        // $data['search_err'] = 'Does not have any result match';
                         flash('search_err_message', $data['search_err']);   
 
                         $this->view('posts/search', $data);
@@ -200,6 +204,38 @@
 
                 // Load view
                 $this->view('posts/search', $data);
+            }
+        }
+
+        public function comment($id) {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $data = [
+                    'user_id' => $_SESSION['user_id'],
+                    'post_id' => $id,
+                    'content' => $_POST['content'],
+                    'content_err' => ''
+                ];
+
+                // Validate
+                if (empty($data['content'])) {
+                    $data['content_err'] = 'Please enter anything to comment';
+                    flash('comment_message', $data['content_err']);
+                }                
+
+                // Make sure no errors
+                if (empty($data['content_err'])) {
+                    // Validate
+                    if ($this->commentModel->addComment($data)) {
+                        flash('comment_message', 'Comment Added');
+                    } else {
+                        die('Something went wrong');
+                    }
+                }
+                
+                redirect('posts/show/' . $id);
+                
+            } else {
+                redirect('posts/show/' . $id);
             }
         }
     }

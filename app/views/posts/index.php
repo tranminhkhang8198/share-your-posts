@@ -13,8 +13,8 @@
 
     <div class="row mb-3">
         <div class="col">
-            <form class="form-inline pull-right" action="<?php echo URLROOT; ?>/posts/search" method="post">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+            <form class="form-inline pull-right" action="<?php echo URLROOT; ?>/posts/search/<?php echo (isset($_POST['search']) ? $_POST['search'] : '');?>" method="get">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="search" id="search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>        
